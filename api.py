@@ -11,9 +11,18 @@ import tasks
 
 api = Flask(__name__)
 
+"""
+NOTES: This gets the average time it takes to for a job to go from
+'enqueued' to 'completed'.  Redis stores completed jobs in the 
+registry for a limited amount of time.  The thinking is that if the
+registry is empty, then the queues are empty, therefore the average
+processing time right now is zero.  If we want all-time average,
+I could store the values in a database.
+"""
 @api.route('/average', methods=['GET'])
 def get_average():
 
+  # TODO: Code for case where there are no registries yet
   avg_time = {}
   redis = Redis()
   qs = ['high','default','low']
@@ -33,6 +42,12 @@ def get_average():
     )
   return response
 
+"""
+NOTES: This only returns the job info as long as it's still in the registry.
+When the job is purged from the registry the API returns 'job not found'.
+This can be fixed by storing data in a DB or testing how much memory is
+required to keep the registries and balance that against business requirements.
+"""
 @api.route('/task/<job_id>', methods=['GET'])
 def find_task(job_id):
 
@@ -84,6 +99,12 @@ def get_task():
   return response
 
 
+"""
+NOTES: Known issues::
+1) I assumed 'processor_id' was the queue priority
+2) All requests are trusted (no nefarious requests)
+3) Validation required for inputs with corresponding responses from the API
+"""
 @api.route('/task', methods=['POST'])
 def set_task():
 
@@ -112,7 +133,7 @@ def set_task():
       pid = validate_pid(request.form['processor_id'])
 
     # TODO: Research performance issues opening multiple
-    # Redis connections and refactor/optimize code 
+    # redis connections and refactor/optimize code 
     # for scale.
     redis_conn = Redis()
     q = Queue(pid, connection=redis_conn)

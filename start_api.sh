@@ -1,4 +1,5 @@
 #!/bin/sh
+# TODO: Use package manager so we don't keep trying to load
 
 sudo apt-get install software-properties-common
 sudo apt-add-repository universe
