@@ -21,8 +21,8 @@ then
 fi
 
 
-#redis-server > /dev/null 2>&1 &
+redis-server > /dev/null 2>&1 &
 # To kill: sudo /etc/init.d/redis-server stop
-#python3 api.py > /dev/null 2>&1 &
-#rq worker high default low > /dev/null 2>&1 &
+python3 api.py > /dev/null 2>&1 &
+rq worker high default low > /dev/null 2>&1 &
 
