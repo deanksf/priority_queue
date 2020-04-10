@@ -4,7 +4,7 @@ from datetime import datetime
 from rq import Queue
 from rq.job import Job
 from rq.registry import FinishedJobRegistry
-import time
+import time, platform
 
 # TODO dynamically import tasks so this file doesn't need to be updated.
 import tasks
